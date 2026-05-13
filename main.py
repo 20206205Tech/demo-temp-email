@@ -44,18 +44,18 @@ def get_temp_email_mailtm():
 
     logger.success(f"Đăng ký thành công! Email của bạn là: {address}")
     logger.info("Đang chờ tin nhắn mới (kiểm tra mỗi 5 giây)...")
-    logger.warning("Script sẽ tự động dừng nếu không có thư mới trong 10 phút.")
+    logger.warning("Script sẽ tự động dừng nếu không có thư mới trong 20 phút.")
 
     # 4. Vòng lặp kiểm tra hộp thư đến
     seen_messages = set()  # Lưu các mail đã đọc để không in lại
 
-    timeout_seconds = 600  # 10 phút = 600 giây
+    timeout_seconds = 1200  # 20 phút = 1200 giây
     last_email_time = time.time()  # Đánh dấu thời gian bắt đầu
 
     while True:
-        # Kiểm tra điều kiện dừng: Nếu quá 10 phút không có thư mới
+        # Kiểm tra điều kiện dừng: Nếu quá 20 phút không có thư mới
         if time.time() - last_email_time > timeout_seconds:
-            logger.warning("Đã 10 phút không có thư mới. Script tự động dừng lại.")
+            logger.warning("Đã 20 phút không có thư mới. Script tự động dừng lại.")
             break
 
         mail_req = requests.get("https://api.mail.tm/messages", headers=headers)
@@ -87,10 +87,6 @@ def get_temp_email_mailtm():
                     )
 
                     logger.info(f"Nội dung:\n{body}")
-
-                    # Trả về luôn (thoát vòng lặp) sau khi nhận được thư đầu tiên
-                    # Nếu bạn muốn treo script để nhận nhiều thư, hãy xóa chữ 'return' đi
-                    return
 
         time.sleep(5)
 
